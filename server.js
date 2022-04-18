@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const app = express()
+const ConnectDB = require('./config/db')
 
 app.set('view engine', 'ejs')
 app.use(express.json());
@@ -15,6 +16,9 @@ const sendmailHandler= require('./routes/index.routes')
 // Use Route
 app.use(statusCheck)
 app.use(sendmailHandler)
+
+// Connecting DB
+ConnectDB()
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, ()=>{
