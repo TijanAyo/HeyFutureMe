@@ -59,55 +59,63 @@ const mailHandler = async ( req, res) => {
     date
   })
 
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.MAIL_ADDR, // Gmail Address
-      pass: process.env.MAIL_PWD, // Gmail Password
-    },
-    tls:{
-      rejectUnauthorized: false
-    }
-    
-  });
-
-
-  let mailOptions = {
-    from: '"Hey Future me 👻" <fromyourpasttopresent@gmail.com>', // sender address
-    to: req.body.email, // email inputed on the client
-    subject: "Hey Future me ✔", // Subject line
-    text: req.body.message, // plain text body
-    // html: "<b>Hello world?</b>", // html body
-  }
-
-  const ddate = req.body.date
-  const D = new Date(ddate)
-  
-  const month = D.getUTCMonth()
-  const dateday = D.getDate()
-  const year = D.getFullYear()
-  const dateweek = D.getDay()
-
-
-  schedule.scheduleJob({dayOfWeek: dateweek, year: year, month: month, date: dateday}, () =>{
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        return console.log(error);
+  if(mail){
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.MAIL_ADDR,
+        pass: process.env.MAIL_PWD,
+      },
+      tls:{
+        rejectUnauthorized: false
       }
-      console.log('Message %s sent: %s', info.messageId, info.response);
-
-      if (info){
-        console.log('Job Sent... Job will now be cancelled')
-        schedule.gracefulShutdown()
-        /* .then(() => process.exit(0)) */
-      }
-      return res.redirect('/')
+      
     });
-  })
+
+    let mailOptions = {
+      from: '"Hey Future me 👻" <fromyourpasttopresent@gmail.com>', // sender address
+      to: req.body.email, // email inputed on the client
+      subject: "Hey Future me ✔", // Subject line
+      text: req.body.message, // plain text body
+      // html: "<b>Hello world?</b>", // html body
+    }
+
+    schedule.scheduleJob('* * * * *', ()=> {
+      if(mail.date === new Date()){
+        transporter.sendMail(mailOptions, (error, info) => {
+          if(error){
+            return console.log(error)
+          }
+          console.log('Message %s sent: %s', info.messageId, info.response);
+
+          if(info){
+            console.log('Job Sent... Job will now be cancelled')
+            schedule.gracefulShutdown()
+          }
+        })
+      }
+      else if(mail.date !== new Date()){
+        transporter.sendMail(mailOptions, (err, info) => {
+          if(err){
+            return console.log(err)
+          }
+          console.log('Message %s sent: %s', info.messageId, info.response);
+
+          if(info){
+            console.log('Job Sent... Job will now be cancelled')
+            schedule.gracefulShutdown()
+          }
+        })
+      }
+      return res.status(400).send({error: 'Something went wrong in the logic'})
+    })
+  }
+  return res.status(400).send({message: 'An error occured somewhere'})
+
 }
+
 
 
 
