@@ -53,7 +53,7 @@ const sendmailHandler = async (req, res) => {
 const mailHandler = async ( req, res) => {
   const { email, message, date } = req.body
 
-  await Mail.create({
+  const mail = await Mail.create({
     email,
     message,
     date
@@ -82,45 +82,35 @@ const mailHandler = async ( req, res) => {
       // html: "<b>Hello world?</b>", // html body
     }
 
-    schedule.scheduleJob('* * * * *', ()=> {
-      if(mail.date === new Date()){
-        transporter.sendMail(mailOptions, (error, info) => {
-          if(error){
-            return console.log(error)
-          }
-          console.log('Message %s sent: %s', info.messageId, info.response);
-
-          if(info){
-            console.log('Job Sent... Job will now be cancelled')
-            schedule.gracefulShutdown()
-          }
-        })
-      }
-      else if(mail.date !== new Date()){
-        transporter.sendMail(mailOptions, (err, info) => {
-          if(err){
-            return console.log(err)
-          }
-          console.log('Message %s sent: %s', info.messageId, info.response);
-
-          if(info){
-            console.log('Job Sent... Job will now be cancelled')
-            schedule.gracefulShutdown()
-          }
-        })
-      }
-      return res.status(400).send({error: 'Something went wrong in the logic'})
+  
+    const ddate = req.body.date
+    const D = new Date(ddate)
+    
+    const month = D.getUTCMonth()
+    const dateday = D.getDate()
+    const year = D.getFullYear()
+    const dateweek = D.getDay()
+  
+  
+    schedule.scheduleJob({dayOfWeek: dateweek, year: year, month: month, date: dateday}, () =>{
+  
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response);
+  
+        if (info){
+          console.log('Job Sent... Job will now be cancelled')
+          schedule.gracefulShutdown()
+          /* .then(() => process.exit(0)) */
+        }
+        return res.redirect('/')
+      });
     })
   }
-  return res.status(400).send({message: 'An error occured somewhere'})
-
 }
 
-
-
-
-
-
 module.exports = {
-    statusCheck, index, sendmailHandler, mailHandler
+  statusCheck, index, sendmailHandler, mailHandler
 }
