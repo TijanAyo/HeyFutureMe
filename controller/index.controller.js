@@ -51,6 +51,13 @@ const sendmailHandler = async (req, res) => {
 
 
 const mailHandler = async ( req, res) => {
+  const { email, message, date } = req.body
+
+  await Mail.create({
+    email,
+    message,
+    date
+  })
 
   let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -65,45 +72,32 @@ const mailHandler = async ( req, res) => {
     }
     
   });
+
+
+  let mailOptions = {
+    from: '"Hey Future me 👻" <fromyourpasttopresent@gmail.com>', // sender address
+    to: req.body.email, // email inputed on the client
+    subject: "Hey Future me ✔", // Subject line
+    text: req.body.message, // plain text body
+    // html: "<b>Hello world?</b>", // html body
+  }
+
+  const ddate = req.body.date
+  const D = new Date(ddate)
   
-  try{
-    const { email, message, date } = req.body
+  const month = D.getUTCMonth()
+  const dateday = D.getDate()
+  const year = D.getFullYear()
+  const dateweek = D.getDay()
 
-    const mail = await Mail.create({
-      email,
-      message,
-      date
-    })
 
-    var ddate = req.body.date
-    var D = new Date(ddate)
-    
-    var month = D.getUTCMonth()
-    /* console.log(month + ' month') */
+  schedule.scheduleJob({dayOfWeek: dateweek, year: year, month: month, date: dateday}, () =>{
 
-    var dateday = D.getDate()
-    /* console.log(day_of_month) */
-
-    var year = D.getFullYear()
-    /* console.log(year) */
-
-    /* cron.schedule(`* * ${day_of_month} ${month} ${year}`, () => {
-      console.log('mail sent...')
-    }) */
-
-  
-    schedule.scheduleJob({hour: 14, minute: 50, dayOfWeek: 1, year: year, month: month, date: dateday}, () =>{
-
-      let info = transporter.sendMail({
-        from: '"Hey Future me 👻" <fromyourpasttopresent@gmail.com>', // sender address
-        to: req.body.email, // email inputed on the client
-        subject: "Hey Future me ✔", // Subject line
-        text: req.body.message, // plain text body
-        // html: "<b>Hello world?</b>", // html body
-      });
-
-      console.log("Message sent: %s", info.messageId);
-      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log('Message %s sent: %s', info.messageId, info.response);
 
       if (info){
         console.log('Job Sent... Job will now be cancelled')
@@ -111,15 +105,14 @@ const mailHandler = async ( req, res) => {
         /* .then(() => process.exit(0)) */
       }
       return res.redirect('/')
-
-    
-    })
-  }
-  catch(error){
-    console.log(error)
-    process.exit(1)
-  }
+    });
+  })
 }
+
+
+
+
+
 module.exports = {
     statusCheck, index, sendmailHandler, mailHandler
 }
