@@ -7,17 +7,12 @@ const { process_params } = require('express/lib/router');
 //@ desc: Status Check
 //@route: GET
 const statusCheck = (req, res) =>{
-  /* res.status(200).send('Okay') */
-  /* var ddate = req.body.date;
-  var newDate = new Date(req.body.date)
-
-  console.log(ddate)
-  console.log(newDate) */
+  res.status(200).send('Okay')
 
 }
 
 const index = (req, res) => {
-    return res.render('../views/index.ejs')
+  return res.render('../views/index.ejs')
 }
 
 const sendmailHandler = async (req, res) => {
