@@ -44,7 +44,6 @@ const sendmailHandler = async (req, res) => {
     return res.redirect('/')
 }
 
-
 const mailHandler = async ( req, res) => {
   const { email, message, date } = req.body
 
