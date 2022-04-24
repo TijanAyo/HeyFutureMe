@@ -55,7 +55,7 @@ const mailHandler = async ( req, res) => {
 
   if(mail){
     let transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: process.env.MAIL_HOST,
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
