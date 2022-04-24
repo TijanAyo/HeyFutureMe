@@ -1,4 +1,5 @@
 ![Hey, Future Me👋👋🏿😃](Hey,_Future_Me👋👋🏿😃.png)
+<br />
 ![GitHub last commit](https://img.shields.io/github/last-commit/TijanAyo/HeyFutureMe?style=plastic)![GitHub issues](https://img.shields.io/github/issues-raw/TijanAyo/HeyFutureMe)
 
 <b><center>Dear me, I am writing this to remind you of the most important things. Essential plans: Jump from an airplane in dubai, Run around naked at a public event, kiss a prince…”</center></b>
