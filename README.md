@@ -2,8 +2,8 @@
 <br />
 ![GitHub last commit](https://img.shields.io/github/last-commit/TijanAyo/HeyFutureMe?style=plastic)![GitHub issues](https://img.shields.io/github/issues-raw/TijanAyo/HeyFutureMe)
 
-<b><center>Dear me, I am writing this to remind you of the most important things. Essential plans: Jump from an airplane in dubai, Run around naked at a public event, kiss a prince…”</center></b>
-<br />
+<b><center><p align="center">Dear me, I am writing this to remind you of the most important things. Essential plans: Jump from an airplane in dubai, Run around naked at a public event, kiss a prince…”</p></center></b>
+
 <b><i>Think about how the feeling you'll get when you read this letter back to your future self. It could be a reminder of who you were versus who your are becoming.</i></b>
 <br />
 
